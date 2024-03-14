@@ -14,6 +14,7 @@
       <module>xindijia-consumer</module>
       <module>xindijia-provider</module>
       <module>xindijia-rpc-easy</module>
+      <module>xindijia-rpc-core</module>
   </modules>
 
   <properties>
