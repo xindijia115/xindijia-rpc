@@ -1,5 +1,6 @@
 package com.xindijia.rpc.config;
 
+import com.xindijia.rpc.constant.SerializerKeys;
 import lombok.Data;
 
 /**
@@ -33,4 +34,9 @@ public class RpcConfig {
      * 模拟调用
      */
     private Boolean mock = false;
+
+    /**
+     * 序列化器
+     */
+    private String serializer = SerializerKeys.JDK;
 }

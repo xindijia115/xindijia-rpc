@@ -1,7 +1,9 @@
 package com.xindijia.rpc.server;
 
+import com.xindijia.rpc.RpcApplication;
 import com.xindijia.rpc.model.RpcRequest;
 import com.xindijia.rpc.model.RpcResponse;
+import com.xindijia.rpc.proxy.SerializerFactory;
 import com.xindijia.rpc.registry.LocalRegistry;
 import com.xindijia.rpc.serializer.JdkSerializer;
 import com.xindijia.rpc.serializer.Serializer;
@@ -29,8 +31,10 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest request) {
         //指定序列化器
-        final JdkSerializer jdkSerializer = new JdkSerializer();
-
+        //final JdkSerializer serializer = new JdkSerializer();
+        //通过使用工厂+读取配置来获取实现类
+        final Serializer serializer =
+                SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
         //记录日志
         System.out.println("receive request:" + request.method() + " " + request.uri());
 
@@ -39,7 +43,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
             byte[] bytes = body.getBytes();
             RpcRequest rpcRequest = null;
             try {
-                rpcRequest = jdkSerializer.deserialize(bytes, RpcRequest.class);
+                rpcRequest = serializer.deserialize(bytes, RpcRequest.class);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -49,7 +53,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
             //如果请求为null直接返回
             if (rpcRequest == null) {
                 rpcResponse.setMessage("rpcRequest is null");
-                doResponse(request, rpcResponse, jdkSerializer);
+                doResponse(request, rpcResponse, serializer);
                 return;
             }
 
@@ -67,7 +71,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
                 e.printStackTrace();
             }
             //响应
-            doResponse(request, rpcResponse, jdkSerializer);
+            doResponse(request, rpcResponse, serializer);
 
         });
     }
