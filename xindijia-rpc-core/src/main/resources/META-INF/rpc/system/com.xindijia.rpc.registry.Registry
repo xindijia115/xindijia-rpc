@@ -1,1 +1,2 @@
 etcd=com.xindijia.rpc.registry.EtcdRegistry
+zookeeper=com.xindijia.rpc.registry.ZookeeperRegistry

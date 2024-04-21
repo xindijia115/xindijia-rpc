@@ -11,6 +11,19 @@ import java.util.List;
  * 注册中心接口
  */
 public interface Registry {
+
+    /**
+     * 监听(消费端)
+     *
+     * @param serviceNodeKey
+     */
+    void watch(String serviceNodeKey);
+
+    /**
+     * 心跳检测(服务端)
+     */
+    void heartBeat();
+
     /**
      * 初始化
      *
