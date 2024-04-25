@@ -15,6 +15,7 @@
       <module>xindijia-provider</module>
       <module>xindijia-rpc-easy</module>
       <module>xindijia-rpc-core</module>
+      <module>xindijia-provider-second</module>
   </modules>
 
   <properties>
