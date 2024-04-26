@@ -10,6 +10,7 @@ import com.xindijia.rpc.RpcApplication;
 import com.xindijia.rpc.config.RpcConfig;
 import com.xindijia.rpc.constant.ProtocolConstant;
 import com.xindijia.rpc.constant.RpcConstant;
+import com.xindijia.rpc.fault.retry.RetryStrategy;
 import com.xindijia.rpc.loadbalancer.LoadBalancer;
 import com.xindijia.rpc.model.RpcRequest;
 import com.xindijia.rpc.model.RpcResponse;
@@ -53,7 +54,7 @@ public class ServiceProxy implements InvocationHandler {
         //JdkSerializer serializer = new JdkSerializer();
         //通过使用工厂+读取配置来获取实现类
         final Serializer serializer =
-        SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
+                SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
         System.out.println(serializer.toString());
         //构造请求
         String serviceName = method.getDeclaringClass().getName();
@@ -85,8 +86,10 @@ public class ServiceProxy implements InvocationHandler {
 
             //ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
             System.out.println("address: " + selectedServiceMetaInfo.getServiceAddress());
+            //使用重试机制
+            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
             //发送TCP请求
-            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            RpcResponse rpcResponse =retryStrategy.doRetry(() -> VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo));
             return rpcResponse.getData();
         } catch (Exception e) {
             throw new RuntimeException("调用失败");

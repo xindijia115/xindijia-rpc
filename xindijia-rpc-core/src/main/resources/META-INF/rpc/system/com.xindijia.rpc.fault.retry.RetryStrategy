@@ -1,0 +1,2 @@
+no=com.xindijia.rpc.fault.retry.NoRetryStrategy
+fixedInterval=com.xindijia.rpc.fault.retry.FixedIntervalRetryStrategy

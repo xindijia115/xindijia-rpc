@@ -1,6 +1,7 @@
 package com.xindijia.rpc.config;
 
 import com.xindijia.rpc.constant.LoadBalancerKeys;
+import com.xindijia.rpc.constant.RetryStrategyKeys;
 import com.xindijia.rpc.constant.SerializerKeys;
 import lombok.Data;
 
@@ -50,4 +51,9 @@ public class RpcConfig {
      * 负载均衡器
      */
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
 }
