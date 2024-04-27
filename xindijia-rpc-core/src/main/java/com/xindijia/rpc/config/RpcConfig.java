@@ -3,6 +3,7 @@ package com.xindijia.rpc.config;
 import com.xindijia.rpc.constant.LoadBalancerKeys;
 import com.xindijia.rpc.constant.RetryStrategyKeys;
 import com.xindijia.rpc.constant.SerializerKeys;
+import com.xindijia.rpc.constant.TolerantStrategyKeys;
 import lombok.Data;
 
 /**
@@ -56,4 +57,9 @@ public class RpcConfig {
      * 重试策略
      */
     private String retryStrategy = RetryStrategyKeys.NO;
+
+    /**
+     * 容错策略
+     */
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
 }

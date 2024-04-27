@@ -1,0 +1,4 @@
+failBack=com.xindijia.rpc.fault.tolerant.FailBackTolerantStrategy
+failFast=com.xindijia.rpc.fault.tolerant.FailFastTolerantStrategy
+failOver=com.xindijia.rpc.fault.tolerant.FailOverTolerantStrategy
+failSafe=com.xindijia.rpc.fault.tolerant.FailSafeTolerantStrategy

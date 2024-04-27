@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 public class VertxTcpClient {
 
     public static RpcResponse doRequest(RpcRequest rpcRequest, ServiceMetaInfo serviceMetaInfo) throws ExecutionException, InterruptedException {
+        //int i = 10 / 0; //测试重试策略
         //发送TCP请求
         Vertx vertx = Vertx.vertx();
         NetClient netClient = vertx.createNetClient();

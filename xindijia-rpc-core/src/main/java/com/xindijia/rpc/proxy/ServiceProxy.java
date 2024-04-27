@@ -11,6 +11,7 @@ import com.xindijia.rpc.config.RpcConfig;
 import com.xindijia.rpc.constant.ProtocolConstant;
 import com.xindijia.rpc.constant.RpcConstant;
 import com.xindijia.rpc.fault.retry.RetryStrategy;
+import com.xindijia.rpc.fault.tolerant.TolerantStrategy;
 import com.xindijia.rpc.loadbalancer.LoadBalancer;
 import com.xindijia.rpc.model.RpcRequest;
 import com.xindijia.rpc.model.RpcResponse;
@@ -86,10 +87,19 @@ public class ServiceProxy implements InvocationHandler {
 
             //ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
             System.out.println("address: " + selectedServiceMetaInfo.getServiceAddress());
-            //使用重试机制
-            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
-            //发送TCP请求
-            RpcResponse rpcResponse =retryStrategy.doRetry(() -> VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo));
+            RpcResponse rpcResponse;
+            try {
+                //使用重试机制
+                RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+                //发送TCP请求
+                rpcResponse = retryStrategy.doRetry(() -> VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo));
+            } catch (Exception e) {
+                //容错机制
+                TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+                System.out.println("容错机制");
+                rpcResponse = tolerantStrategy.doTolerant(null, e);
+            }
+
             return rpcResponse.getData();
         } catch (Exception e) {
             throw new RuntimeException("调用失败");
